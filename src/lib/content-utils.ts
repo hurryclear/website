@@ -23,6 +23,9 @@ export function isoDate(date: Date): string {
 export function slugifyTerm(name: string): string {
   return name
     .toLowerCase()
+    // Spell out + and # first, so "C++", "C#" and "C" don't all collapse to "c".
+    .replace(/\+/g, 'plus')
+    .replace(/#/g, 'sharp')
     .replace(/[^\p{L}\p{N}]+/gu, '-')
     .replace(/^-+|-+$/g, '');
 }
@@ -43,12 +46,16 @@ export function countTerms(names: string[][]): TermCount[] {
       else bySlug.set(slug, { name, slug, count: 1 });
     }
   }
-  return [...bySlug.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  return [...bySlug.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'en'));
 }
 
-/** Drafts show in `astro dev` but are hidden from the production build. */
-export function isPublished(entry: { data: { draft: boolean } }, isProd: boolean): boolean {
-  return !isProd || !entry.data.draft;
+/** Drafts and future-dated posts show in `astro dev` but are hidden from the production build. */
+export function isPublished(
+  entry: { data: { draft: boolean; date: Date } },
+  isProd: boolean,
+  now: Date = new Date(),
+): boolean {
+  return !isProd || (!entry.data.draft && entry.data.date <= now);
 }
 
 /** Sort comparator: newest first. */

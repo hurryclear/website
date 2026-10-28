@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import vm from 'node:vm';
 import { readPage } from './helpers.mjs';
 
 test('home page builds and links a stylesheet containing prose and dark styles', () => {
@@ -25,12 +26,38 @@ test('base layout: title, meta, header, footer', () => {
   assert.match(html, /<a[^>]+href="\/privacy\/"/);
 });
 
-test('no-flash theme script runs before the stylesheet and survives blocked storage', () => {
+// Runs the inline theme script from dist/index.html against a fake browser; returns the classes it added.
+function runThemeScript({ storage, osDark }) {
+  const html = readPage('');
+  const script = html.match(/<script>([^<]*prefers-color-scheme[^<]*)<\/script>/)?.[1];
+  assert.ok(script, 'inline theme script found');
+  const added = [];
+  const sandbox = {
+    matchMedia: () => ({ matches: osDark }),
+    document: { documentElement: { classList: { add: (c) => added.push(c) } } },
+  };
+  if (storage === 'blocked') {
+    Object.defineProperty(sandbox, 'localStorage', { get() { throw new Error('blocked'); } });
+  } else {
+    sandbox.localStorage = storage;
+  }
+  vm.runInNewContext(script, sandbox);
+  return added;
+}
+
+test('no-flash theme script runs before the stylesheet', () => {
   const html = readPage('');
   const script = html.indexOf('prefers-color-scheme');
   const css = html.search(/<link[^>]+rel="stylesheet"/);
   assert.ok(script > -1 && script < css, 'inline theme script precedes CSS');
-  assert.match(html.slice(script - 400, script + 400), /try\s*\{/);
+});
+
+test('theme script follows the OS when storage is blocked', () => {
+  assert.deepEqual(runThemeScript({ storage: 'blocked', osDark: true }), ['dark']);
+});
+
+test('theme script respects a stored light choice over a dark OS', () => {
+  assert.deepEqual(runThemeScript({ storage: { theme: 'light' }, osDark: true }), []);
 });
 
 test('theme toggle is a hydrated React island', () => {
@@ -94,6 +121,12 @@ test('404 page', () => {
   assert.match(html, /Page not found/);
   assert.match(html, /<a[^>]+href="\/"[^>]*>\s*Go back home/);
   assert.doesNotMatch(html, /profile-avatar/); // no rail
+  assert.doesNotMatch(html, /rel="canonical"/); // a canonical on a 404 would point at the wrong URL
+});
+
+test('built HTML has no author-only comments', () => {
+  // <!--astro:end--> is Astro's own island marker; anything else is a leaked template comment.
+  assert.doesNotMatch(readPage(''), /<!--(?!astro:end)/);
 });
 
 test('search placeholder', () => {

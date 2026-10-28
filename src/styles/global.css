@@ -2,7 +2,7 @@
    Ported from the old Hugo site's assets/css/main.css. */
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
-/* Tailwind 4 dark variant keyed on a `.dark` class (set on <html> by ThemeToggle), not the OS setting. */
+/* Tailwind 4 dark variant keyed on a `.dark` class (set on <html> by the inline script in BaseLayout, and by ThemeToggle on click), not the OS setting. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*

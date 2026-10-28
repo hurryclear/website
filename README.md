@@ -32,7 +32,7 @@ Create `src/content/posts/my-post.md`. The file name becomes the URL (`/posts/my
 ```md
 ---
 title: 'My post'              # required
-date: 2026-10-29              # required
+date: 2026-10-29              # required, YYYY-MM-DD only (no time)
 description: 'One sentence.'  # optional, shown in the list
 draft: false                  # optional, default false. true = never published
 categories: ['Notes']         # optional, default []
@@ -42,16 +42,16 @@ tags: ['astro']               # optional, default []
 Write Markdown here.
 ```
 
-A wrong or missing field makes the build fail with a message naming the file.
+A wrong or missing field makes the build fail with a message naming the file. Write `date` as `YYYY-MM-DD` only: a time plus an offset can render as the previous day, so the schema rejects it. Posts dated in the future are hidden from the production build (like Hugo), and still show in the dev server.
 
 ## Develop
 
 ```
 npm install
-astro dev --background   # start the dev server in the background
-astro dev status         # is it running, and on which URL
-astro dev logs           # see its output
-astro dev stop           # stop it
+npx astro dev --background   # start the dev server in the background
+npx astro dev status         # is it running, and on which URL
+npx astro dev logs           # see its output
+npx astro dev stop           # stop it
 npm test                 # unit tests, then build + HTML tests
 npm run check            # astro check: types and Astro errors
 npm run build            # production build into dist/
@@ -72,7 +72,7 @@ npx wrangler deploy
 
 The first run asks you to log in to Cloudflare. `wrangler` is not a dependency; `npx` fetches it.
 
-Option 2, from the dashboard: Workers & Pages, Create, Import a repository. Pick this repo, set the build command to `npm run build`, and add the environment variable `NODE_VERSION` = `22`.
+Option 2, from the dashboard: Workers & Pages, Create, Import a repository. Pick this repo, set the build command to `npm run build`, the deploy command to `npx wrangler deploy`, and add the environment variable `NODE_VERSION` = `22`. The dashboard builds the production branch (`main`), so merge this branch first or change the production branch in the settings.
 
 ## Placeholders
 

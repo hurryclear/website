@@ -1,6 +1,6 @@
 // Shared post queries (published posts, category/tag counts). Used by the list, post and term pages.
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { byDateDesc, countTerms, isPublished, slugifyTerm } from './content-utils.ts';
+import { byDateDesc, countTerms, isPublished, slugifyTerm } from '@lib/content-utils';
 
 type Post = CollectionEntry<'posts'>;
 

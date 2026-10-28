@@ -22,11 +22,11 @@ import { t } from '../i18n/ui';
     <Icon name="search" class="block h-5 w-5" />
   </a>
 
-  <!-- TODO(hur): language switcher goes here (needs the i18n block in astro.config.mjs).
-       Read: https://docs.astro.build/en/guides/internationalization/ -->
+  {/* TODO(hur): language switcher goes here (needs the i18n block in astro.config.mjs).
+       Read: https://docs.astro.build/en/guides/internationalization/ */}
 
-  <!-- client:load = render on the server AND hydrate in the browser right away, so the click works.
-       The two icons are passed as children: Astro renders them to static HTML first. -->
+  {/* client:load = render on the server AND hydrate in the browser right away, so the click works.
+       The two icons are passed as children: Astro renders them to static HTML first. */}
   <ThemeToggle client:load label={t('theme.toggle')}>
     <Icon name="brightness-down" class="block h-5 w-5 dark:hidden" />
     <Icon name="moon-stars" class="hidden h-5 w-5 dark:block" />

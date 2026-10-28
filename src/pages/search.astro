@@ -15,8 +15,8 @@ import { t } from '../i18n/ui';
   <div class="max-w-2xl">
     <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">{t('search.title')}</h1>
     <div class="mt-6 flex items-center border-b border-slate-300 dark:border-gray-700">
-      <i class="h-5 w-5 flex-none text-slate-400"><Icon name="search" /></i>
-      <!-- disabled until search exists; aria-label because there is no visible <label> -->
+      <Icon name="search" class="h-5 w-5 flex-none text-slate-400" />
+      {/* disabled until search exists; aria-label because there is no visible <label> */}
       <input
         type="text"
         id="search-input"

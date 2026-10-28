@@ -9,7 +9,10 @@ const posts = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/posts' }),
   schema: z.object({
     title: z.string(),
-    date: z.coerce.date(),
+    // Write dates as YYYY-MM-DD. A time plus offset can land on the previous UTC day, so reject it.
+    date: z.coerce.date().refine((d) => d.getTime() % 86_400_000 === 0, {
+      message: 'date must be date-only (YYYY-MM-DD), without a time',
+    }),
     description: z.string().optional(),
     draft: z.boolean().default(false),
     categories: z.array(z.string()).default([]),

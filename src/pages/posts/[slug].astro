@@ -21,10 +21,13 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 
 // Categories first, then tags, like the old site. Each links to its term page.
+// Names that slugify to '' have no term page, so they are left out (countTerms skips them too).
 const terms = [
-  ...post.data.categories.map((name) => ({ name, href: `/categories/${slugifyTerm(name)}/` })),
-  ...post.data.tags.map((name) => ({ name, href: `/tags/${slugifyTerm(name)}/` })),
-];
+  ...post.data.categories.map((name) => ({ name, slug: slugifyTerm(name), kind: 'categories' })),
+  ...post.data.tags.map((name) => ({ name, slug: slugifyTerm(name), kind: 'tags' })),
+]
+  .filter((term) => term.slug !== '')
+  .map((term) => ({ name: term.name, href: `/${term.kind}/${term.slug}/` }));
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description} rail="categories" sourcePath={post.filePath}>

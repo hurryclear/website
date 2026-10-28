@@ -12,8 +12,9 @@ interface Props {
   description?: string;
   rail?: 'profile' | 'categories' | 'none';
   sourcePath?: string; // repo-relative content file, passed on to the footer's Source link
+  noCanonical?: boolean; // the 404 page is served at any URL, so a canonical link would be wrong
 }
-const { title, description = SITE.description, rail = 'profile', sourcePath } = Astro.props;
+const { title, description = SITE.description, rail = 'profile', sourcePath, noCanonical = false } = Astro.props;
 
 const pageTitle = title ? `${title} :: ${SITE.title}` : SITE.title;
 // Astro.site comes from `site` in astro.config.mjs; needed to build absolute URLs.
@@ -27,21 +28,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical.href} />
+    {!noCanonical && <link rel="canonical" href={canonical.href} />}
 
-    <!-- Set .dark before first paint to avoid a light-mode flash. is:inline stops Astro from bundling
+    {/* Set .dark before first paint to avoid a light-mode flash. is:inline stops Astro from bundling
          or moving this script, so it stays right here in <head> and runs before the stylesheet loads.
-         It can't be React: React only runs after the page has loaded. -->
+         It can't be React: React only runs after the page has loaded. */}
     <script is:inline>
       (function () {
-        try {
-          if (
-            localStorage.theme === 'dark' ||
-            (!('theme' in localStorage) && matchMedia('(prefers-color-scheme: dark)').matches)
-          ) {
-            document.documentElement.classList.add('dark');
-          }
-        } catch (e) {} // storage blocked: fall back to the light theme
+        var stored = null;
+        try { stored = localStorage.theme; } catch (e) {} // storage blocked: fall back to the OS setting
+        if (stored === 'dark' || (!stored && matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
       })();
     </script>
   </head>

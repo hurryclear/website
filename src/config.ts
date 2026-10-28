@@ -12,7 +12,6 @@ export const SITE = {
   bio: 'Data Engineer & Software Developer @Webis Group // Recent CS graduate passionate about data mining, software development, and NLP research',
   repoUrl: 'https://github.com/hurryclear/website',
   repoBranch: 'main',
-  since: 2026,
 };
 
 export const MAIN_NAV: { label: string; href: string }[] = [

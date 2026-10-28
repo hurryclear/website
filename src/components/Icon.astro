@@ -20,5 +20,5 @@ const svg = Object.entries(icons).find(([path]) => path.endsWith(`/${name}.svg`)
 if (!svg) throw new Error(`Unknown icon: ${name}`);
 ---
 
-<!-- set:html inserts the string as raw HTML instead of escaping it. Safe: the SVGs are our own files. -->
+{/* set:html inserts the string as raw HTML instead of escaping it. Safe: the SVGs are our own files. */}
 <i class={className} set:html={svg} />

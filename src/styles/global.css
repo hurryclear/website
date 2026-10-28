@@ -1,99 +1,69 @@
-html {
-    background-color: #f1f5f9;
-    font-family: Helvetica, sans-serif;
+/* Single stylesheet for the whole site. Imported only from BaseLayout.
+   Ported from the old Hugo site's assets/css/main.css. */
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+/* Tailwind 4 dark variant keyed on a `.dark` class (set on <html> by ThemeToggle), not the OS setting. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  Tailwind v4 sets the default border color to `currentColor`. Restore the v3
+  behaviour so borders in the templates stay subtle without an explicit color.
+*/
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
 }
 
-body {
-    margin: 0 auto;
-    width: 100%;
-    max-width: 80ch;
-    padding: 1rem;
-    line-height: 1.5;
+@layer base {
+  /* Homepage / About profile-card avatar. Square crop + circle done here so
+     the framing can be tuned live via object-position. */
+  .profile-avatar {
+    width: 6rem;
+    height: 6rem;
+    object-fit: cover;
+    object-position: 50% 25%;
+  }
+
+  .footnote-backref {
+    text-decoration: none !important;
+  }
 }
 
-* {
-    box-sizing: border-box;
+@layer components {
+  /* Site footer. Markup carries only these class names; every visual rule
+     lives here. `@apply` pulls in the utility tokens, so the dark: and sm:
+     variants bring dark mode and the responsive stack along for free. */
+
+  .site-footer {
+    @apply border-t border-slate-200/80 dark:border-gray-800
+           text-sm text-slate-500 dark:text-slate-400;
+  }
+
+  .site-footer__inner {
+    @apply mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-3
+           flex flex-col sm:flex-row items-center justify-between gap-3;
+  }
+
+  .site-footer__nav {
+    @apply flex gap-x-4;
+  }
+
+  .site-footer__link {
+    @apply hover:text-emerald-600;
+  }
 }
 
-h1 {
-    margin: 1rem 0;
-    font-size: 2.5rem;
-}
-
-html {
-    background-color: #f1f5f9;
-    font-family: sans-serif;
-}
-
-body {
-    margin: 0 auto;
-    width: 100%;
-    max-width: 80ch;
-    padding: 1rem;
-    line-height: 1.5;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-h1 {
-    margin: 1rem 0;
-    font-size: 2.5rem;
-}
-
-/* nav styles */
-
-.menu {
-    background-color: #0d0950;
-    border: none;
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: bold;
-    padding: 5px 10px;
-}
-
-.nav-links {
-    width: 100%;
-    display: none;
-    margin: 0;
-}
-
-.nav-links a {
-    display: block;
-    text-align: center;
-    padding: 10px 0;
-    text-decoration: none;
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #0d0950;
-}
-
-.nav-links a:hover,
-.nav-links a:focus {
-    background-color: #ee8241;
-}
-
-:has(.menu[aria-expanded="true"]) .nav-links {
-    display: unset;
-}
-
-@media screen and (min-width: 636px) {
-    .nav-links {
-        margin-left: 5em;
-        display: block;
-        position: static;
-        width: auto;
-        background: none;
-    }
-
-    .nav-links a {
-        display: inline-block;
-        padding: 15px 20px;
-    }
-
-    .menu {
-        display: none;
-    }
+/* "prose-quoteless": typography plugin adds decorative quotes around
+   blockquotes and inline code; this opt-out class removes them. */
+.prose-quoteless :where(blockquote p:first-of-type)::before,
+.prose-quoteless :where(blockquote p:first-of-type)::after,
+.prose-quoteless :where(code)::before,
+.prose-quoteless :where(code)::after {
+  content: none;
 }

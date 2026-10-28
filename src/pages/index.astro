@@ -1,10 +1,11 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+// TEMPORARY home page: only proves the stylesheet pipeline works. Task 3 replaces it.
+// The frontmatter fence (---) is server-side code that runs at build time.
 import "../styles/global.css";
-
-const pageTitle = "Homepage";
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-	<h2>My blog subtitle</h2>
-</BaseLayout>
+<html lang="en">
+  <body>
+    <article class="prose prose-slate dark:prose-invert prose-quoteless">Hello</article>
+  </body>
+</html>

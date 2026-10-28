@@ -1,0 +1,16 @@
+---
+// /posts/ : every published post, newest first.
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeading from '@components/PageHeading.astro';
+import PostList from '@components/PostList.astro';
+import { getPublishedPosts } from '@lib/posts';
+
+const posts = await getPublishedPosts();
+// TODO(hur): split this list into pages with paginate() once there are many posts.
+// Docs: https://docs.astro.build/en/guides/routing/ (section "Pagination").
+---
+
+<BaseLayout title="Posts" rail="categories">
+  <PageHeading title="Posts" />
+  <PostList posts={posts} />
+</BaseLayout>

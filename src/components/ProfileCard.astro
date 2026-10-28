@@ -1,0 +1,31 @@
+---
+// Right-rail identity block: avatar, name, bio, social links. Used by BaseLayout when rail="profile".
+import { Image } from 'astro:assets';
+import { SITE } from '@config';
+import { t } from '../i18n/ui';
+import SocialLinks from '@components/SocialLinks.astro';
+// Importing an image (instead of using a URL string) lets Astro resize and convert it at build time.
+import avatar from '@assets/images/profile-avatar.png';
+---
+
+<section class="flex flex-col gap-y-3 text-sm">
+  {/* Generated at 256px wide; the .profile-avatar class in global.css sets the 6rem display size. */}
+  <Image
+    src={avatar}
+    width={256}
+    format="webp"
+    quality={85}
+    alt={SITE.author.name}
+    class="profile-avatar rounded-full bg-slate-100 dark:bg-gray-800"
+  />
+
+  <h2 class="text-base font-semibold text-slate-900 dark:text-slate-100">{SITE.author.name}</h2>
+
+  <div class="text-slate-500 dark:text-slate-400 leading-relaxed">{SITE.bio}</div>
+
+  <div class="flex flex-row flex-wrap text-slate-500 dark:text-slate-400">
+    <SocialLinks />
+  </div>
+
+  <a class="font-medium hover:text-emerald-600" href="/about/">{t('profile.more')} &rarr;</a>
+</section>

@@ -1,0 +1,15 @@
+---
+// Row of icon links to GitHub, LinkedIn etc. Used in the profile card.
+// The list lives in SOCIAL_LINKS in src/config.ts.
+import { SOCIAL_LINKS } from '@config';
+import Icon from '@components/Icon.astro';
+---
+
+{
+  SOCIAL_LINKS.map((link) => (
+    <a href={link.href} target="_blank" rel="noopener" title={link.title} class="mr-3 hover:text-emerald-600">
+      <span class="sr-only">{link.title}</span>
+      <Icon name={link.icon} class="inline-block h-6 w-6" />
+    </a>
+  ))
+}

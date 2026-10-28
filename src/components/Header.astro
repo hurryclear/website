@@ -1,0 +1,34 @@
+---
+// Sticky top bar contents: site name, main menu, search link, theme toggle.
+// BaseLayout supplies the sticky <header> and the max-width container around it.
+import Icon from '@components/Icon.astro';
+import Menu from '@components/Menu.astro';
+import ThemeToggle from '@components/ThemeToggle.tsx';
+import { SITE } from '@config';
+import { t } from '../i18n/ui';
+---
+
+<a href="/" class="text-lg font-semibold tracking-tight hover:text-emerald-600">{SITE.title}</a>
+
+<div class="flex items-center gap-x-1">
+  <Menu />
+
+  <a
+    href="/search/"
+    title={t('search.title')}
+    class="inline-flex items-center p-2 text-slate-600 dark:text-slate-300 hover:text-emerald-600"
+  >
+    <span class="sr-only">{t('search.title')}</span>
+    <Icon name="search" class="block h-5 w-5" />
+  </a>
+
+  {/* TODO(hur): language switcher goes here (needs the i18n block in astro.config.mjs).
+       Read: https://docs.astro.build/en/guides/internationalization/ */}
+
+  {/* client:load = render on the server AND hydrate in the browser right away, so the click works.
+       The two icons are passed as children: Astro renders them to static HTML first. */}
+  <ThemeToggle client:load label={t('theme.toggle')}>
+    <Icon name="brightness-down" class="block h-5 w-5 dark:hidden" />
+    <Icon name="moon-stars" class="hidden h-5 w-5 dark:block" />
+  </ThemeToggle>
+</div>

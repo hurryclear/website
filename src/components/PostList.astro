@@ -1,0 +1,31 @@
+---
+// Divided list of posts (title, date, description). Used by /posts/ and the category/tag term pages.
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, isoDate } from '@lib/content-utils';
+import { t } from '../i18n/ui';
+
+interface Props {
+  posts: CollectionEntry<'posts'>[];
+}
+const { posts } = Astro.props;
+---
+
+<ul class="mt-8 flex flex-col divide-y divide-slate-200 dark:divide-gray-800 border-t border-slate-200 dark:border-gray-800">
+  {
+    posts.length > 0 ? (
+      posts.map((post) => (
+        <li class="py-6">
+          <a href={`/posts/${post.id}/`} class="text-xl font-medium text-slate-900 dark:text-slate-100 hover:text-emerald-600">
+            {post.data.title}
+          </a>
+          <div class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+          </div>
+          {post.data.description && <p class="mt-2 text-slate-600 dark:text-slate-300">{post.data.description}</p>}
+        </li>
+      ))
+    ) : (
+      <li class="py-6 text-slate-500 dark:text-slate-400">{t('list.empty')}</li>
+    )
+  }
+</ul>

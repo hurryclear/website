@@ -1,0 +1,16 @@
+---
+// Page h1 plus optional description. Used by about and privacy.
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+
+{/* An empty title (About) renders no h1; the Markdown supplies its own headings. */}
+{
+  title && (
+    <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">{title}</h1>
+  )
+}
+{description && <p class="mt-2 text-slate-500 dark:text-slate-400">{description}</p>}

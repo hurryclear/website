@@ -1,0 +1,69 @@
+/* Single stylesheet for the whole site. Imported only from BaseLayout.
+   Ported from the old Hugo site's assets/css/main.css. */
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+/* Tailwind 4 dark variant keyed on a `.dark` class (set on <html> by the inline script in BaseLayout, and by ThemeToggle on click), not the OS setting. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  Tailwind v4 sets the default border color to `currentColor`. Restore the v3
+  behaviour so borders in the templates stay subtle without an explicit color.
+*/
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@layer base {
+  /* Homepage / About profile-card avatar. Square crop + circle done here so
+     the framing can be tuned live via object-position. */
+  .profile-avatar {
+    width: 6rem;
+    height: 6rem;
+    object-fit: cover;
+    object-position: 50% 25%;
+  }
+
+  .footnote-backref {
+    text-decoration: none !important;
+  }
+}
+
+@layer components {
+  /* Site footer. Markup carries only these class names; every visual rule
+     lives here. `@apply` pulls in the utility tokens, so the dark: and sm:
+     variants bring dark mode and the responsive stack along for free. */
+
+  .site-footer {
+    @apply border-t border-slate-200/80 dark:border-gray-800
+           text-sm text-slate-500 dark:text-slate-400;
+  }
+
+  .site-footer__inner {
+    @apply mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-3
+           flex flex-col sm:flex-row items-center justify-between gap-3;
+  }
+
+  .site-footer__nav {
+    @apply flex gap-x-4;
+  }
+
+  .site-footer__link {
+    @apply hover:text-emerald-600;
+  }
+}
+
+/* "prose-quoteless": typography plugin adds decorative quotes around
+   blockquotes and inline code; this opt-out class removes them. */
+.prose-quoteless :where(blockquote p:first-of-type)::before,
+.prose-quoteless :where(blockquote p:first-of-type)::after,
+.prose-quoteless :where(code)::before,
+.prose-quoteless :where(code)::after {
+  content: none;
+}

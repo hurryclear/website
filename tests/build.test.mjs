@@ -59,3 +59,32 @@ test('about and privacy pages', () => {
   assert.match(about, /<a[^>]+href="\/about\/"[^>]+aria-current="page"/);
   assert.match(readPage('privacy/'), /This site does not collect personal data/);
 });
+
+test('posts list shows hello world with formatted date', () => {
+  const html = readPage('posts/');
+  assert.match(html, /<title>Posts :: Hur Jiang<\/title>/);
+  assert.match(html, /href="\/posts\/hello-world\/"[^>]*>\s*Hello World/);
+  assert.match(html, /<time datetime="2026-08-27">Aug 27, 2026<\/time>/);
+  assert.match(html, /No categories yet\./); // rail empty state
+  assert.match(html, /<a[^>]+href="\/posts\/"[^>]+aria-current="page"/);
+});
+
+test('single post', () => {
+  const html = readPage('posts/hello-world/');
+  assert.match(html, /<title>Hello World :: Hur Jiang<\/title>/);
+  assert.match(html, /First post on the new site\./);
+  assert.match(html, /This is the first post\./);
+  assert.match(html, /<a[^>]+href="\/posts\/"[^>]+aria-current="page"/);
+  assert.match(html, /blob\/main\/src\/content\/posts\/hello-world\.md/);
+});
+
+test('drafts never ship', () => {
+  assert.throws(() => readPage('posts/zz-draft-fixture/'));
+  assert.doesNotMatch(readPage('posts/'), /Draft Fixture/);
+  assert.throws(() => readPage('categories/secret/'));
+});
+
+test('taxonomy index pages exist', () => {
+  assert.match(readPage('categories/'), /<title>Categories :: Hur Jiang<\/title>/);
+  assert.match(readPage('tags/'), /<title>Tags :: Hur Jiang<\/title>/);
+});

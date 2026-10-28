@@ -1,0 +1,23 @@
+---
+// /tags/ : every tags term with its post count.
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeading from '@components/PageHeading.astro';
+import { getTerms } from '@lib/posts';
+
+const terms = await getTerms('tags');
+---
+
+<BaseLayout title="Tags" rail="categories">
+  <PageHeading title="Tags" />
+  <ul class="mt-8 flex flex-col gap-y-2">
+    {
+      terms.map((term) => (
+        <li>
+          <a href={`/tags/${term.slug}/`} class="text-slate-600 dark:text-slate-300 hover:text-emerald-600">
+            {term.name} <span class="text-slate-400 dark:text-slate-500">({term.count})</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

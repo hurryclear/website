@@ -1,0 +1,25 @@
+---
+// /tags/<term>/ : posts that carry one term.
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeading from '@components/PageHeading.astro';
+import PostList from '@components/PostList.astro';
+import { getPublishedPosts, getTerms, postsWithTerm } from '@lib/posts';
+
+// [term] is a dynamic route, so getStaticPaths lists every term that exists.
+// Each entry gives the URL param (the slug) and props (display name + matching posts).
+export async function getStaticPaths() {
+  const terms = await getTerms('tags');
+  const posts = await getPublishedPosts();
+  return terms.map(({ name, slug }) => ({
+    params: { term: slug },
+    props: { name, posts: postsWithTerm(posts, 'tags', slug) },
+  }));
+}
+
+const { name, posts } = Astro.props;
+---
+
+<BaseLayout title={name} rail="categories">
+  <PageHeading title={name} />
+  <PostList posts={posts} />
+</BaseLayout>

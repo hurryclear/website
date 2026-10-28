@@ -1,0 +1,46 @@
+---
+// /posts/<slug>/ : one page per published post.
+import { render } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeading from '@components/PageHeading.astro';
+import Prose from '@components/Prose.astro';
+import Icon from '@components/Icon.astro';
+import { getPublishedPosts } from '@lib/posts';
+import { formatDate, isoDate, slugifyTerm } from '@lib/content-utils';
+
+// The file name [slug] makes this a dynamic route. Astro builds static HTML, so it has to
+// know every slug ahead of time: getStaticPaths returns one { params, props } per page.
+// `params` fills the [slug] in the URL; `props` is handed to this page as Astro.props.
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+// render() turns the Markdown body into a component we can place in the template.
+const { Content } = await render(post);
+
+// Categories first, then tags, like the old site. Each links to its term page.
+const terms = [
+  ...post.data.categories.map((name) => ({ name, href: `/categories/${slugifyTerm(name)}/` })),
+  ...post.data.tags.map((name) => ({ name, href: `/tags/${slugifyTerm(name)}/` })),
+];
+---
+
+<BaseLayout title={post.data.title} description={post.data.description} rail="categories" sourcePath={post.filePath}>
+  <article>
+    <PageHeading title={post.data.title} description={post.data.description} />
+
+    <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-500 dark:text-slate-400">
+      <span class="inline-flex items-center gap-x-1">
+        <Icon name="calendar" class="h-4 w-4" />
+        <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+      </span>
+      {terms.map((term) => <a href={term.href} class="hover:text-emerald-600">#{term.name}</a>)}
+    </div>
+
+    <div class="mt-8">
+      <Prose><Content /></Prose>
+    </div>
+  </article>
+</BaseLayout>

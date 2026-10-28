@@ -5,8 +5,8 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://www.hurryclear.com",
-  base: "/home",
+  // site: "https://www.hurryclear.com",
+  // base: "/home",
   trailingSlash: "ignore",
   integrations: [react()]
 });

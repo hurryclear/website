@@ -136,9 +136,9 @@ test('search placeholder', () => {
   assert.doesNotMatch(html, /profile-avatar/);
 });
 
-test('cloudflare serves dist with the 404 page', () => {
+test('cloudflare serves dist on hurryclear.com with the 404 page', () => {
   const cfg = readFileSync('wrangler.jsonc', 'utf8');
   assert.match(cfg, /"directory":\s*"\.\/dist"/);
   assert.match(cfg, /"not_found_handling":\s*"404-page"/);
-  assert.doesNotMatch(cfg, /hurryclear\.com/);
+  assert.match(cfg, /"pattern":\s*"hurryclear\.com",\s*"custom_domain":\s*true/);
 });

@@ -1,0 +1,11 @@
+// Cloudflare Workers config: serve the built static site (./dist) as-is.
+// Used by `npx wrangler deploy` (run `npm run build` first). Preview only: no custom domain here.
+{
+  "name": "hurryclear-astro",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    // Unknown URLs get dist/404.html with a real 404 status.
+    "not_found_handling": "404-page"
+  }
+}

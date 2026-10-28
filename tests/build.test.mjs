@@ -102,3 +102,10 @@ test('search placeholder', () => {
   assert.match(html, /Search is coming soon\./);
   assert.doesNotMatch(html, /profile-avatar/);
 });
+
+test('cloudflare serves dist with the 404 page', () => {
+  const cfg = readFileSync('wrangler.jsonc', 'utf8');
+  assert.match(cfg, /"directory":\s*"\.\/dist"/);
+  assert.match(cfg, /"not_found_handling":\s*"404-page"/);
+  assert.doesNotMatch(cfg, /hurryclear\.com/);
+});

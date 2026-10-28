@@ -1,5 +1,5 @@
 // Cloudflare Workers config: serve the built static site (./dist) as-is.
-// Used by `npx wrangler deploy` (run `npm run build` first). Preview only: no custom domain here.
+// Used by `npx wrangler deploy` (run `npm run build` first). Serves hurryclear.com via `routes` below.
 {
   "name": "hurryclear",
   "compatibility_date": "2026-10-01",
@@ -7,5 +7,8 @@
     "directory": "./dist",
     // Unknown URLs get dist/404.html with a real 404 status.
     "not_found_handling": "404-page"
-  }
+  },
+  "routes": [
+    {"pattern": "hurryclear.com", "custom_domain": true}
+  ]
 }

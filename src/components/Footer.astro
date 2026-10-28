@@ -1,0 +1,27 @@
+---
+// Site footer: copyright on the left, footer links on the right. Used by BaseLayout.
+// Styling lives in the .site-footer* classes in src/styles/global.css.
+import { SITE, FOOTER_NAV } from '@config';
+
+interface Props {
+  sourcePath?: string; // repo-relative content file, e.g. src/content/posts/hello-world.md
+}
+const { sourcePath } = Astro.props;
+
+// "Source" points at the file this page was built from, or the repo root when there is none.
+const sourceUrl = sourcePath
+  ? `${SITE.repoUrl}/blob/${SITE.repoBranch}/${sourcePath}`
+  : SITE.repoUrl;
+// Frontmatter runs at build time, so this is the year of the last build.
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>© {year} {SITE.title}</div>
+    <nav class="site-footer__nav">
+      {FOOTER_NAV.map((item) => <a href={item.href} class="site-footer__link">{item.label}</a>)}
+      <a href={sourceUrl} class="site-footer__link" target="_blank" rel="noopener">Source</a>
+    </nav>
+  </div>
+</footer>

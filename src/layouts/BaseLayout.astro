@@ -1,0 +1,75 @@
+---
+// Page shell used by every page: <head>, header, main column with a side rail, footer.
+import '../styles/global.css';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import { SITE } from '@config';
+
+interface Props {
+  title?: string; // omitted on the home page
+  description?: string;
+  rail?: 'profile' | 'categories' | 'none';
+  sourcePath?: string; // repo-relative content file, passed on to the footer's Source link
+}
+const { title, description = SITE.description, rail = 'profile', sourcePath } = Astro.props;
+
+const pageTitle = title ? `${title} :: ${SITE.title}` : SITE.title;
+// Astro.site comes from `site` in astro.config.mjs; needed to build absolute URLs.
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+
+    <!-- Set .dark before first paint to avoid a light-mode flash. is:inline stops Astro from bundling
+         or moving this script, so it stays right here in <head> and runs before the stylesheet loads.
+         It can't be React: React only runs after the page has loaded. -->
+    <script is:inline>
+      (function () {
+        try {
+          if (
+            localStorage.theme === 'dark' ||
+            (!('theme' in localStorage) && matchMedia('(prefers-color-scheme: dark)').matches)
+          ) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {} // storage blocked: fall back to the light theme
+      })();
+    </script>
+  </head>
+
+  <body class="min-h-screen flex flex-col bg-slate-50 dark:bg-gray-900 text-slate-800 dark:text-slate-200">
+    <header class="sticky top-0 z-40 border-b border-slate-200/80 dark:border-gray-800 bg-slate-50/85 dark:bg-gray-900/85 backdrop-blur">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+        <Header />
+      </div>
+    </header>
+
+    <main class="flex-auto w-full mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      {
+        rail === 'none' ? (
+          <slot />
+        ) : (
+          <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_13rem] lg:gap-16">
+            <div class="min-w-0">
+              <slot />
+            </div>
+            <aside class="hidden lg:block">
+              <div class="sticky top-24">
+                {/* TODO: Task 4 renders ProfileCard or CategoryRail here, depending on `rail`. */}
+              </div>
+            </aside>
+          </div>
+        )
+      }
+    </main>
+
+    <Footer sourcePath={sourcePath} />
+  </body>
+</html>

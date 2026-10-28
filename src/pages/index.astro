@@ -1,11 +1,8 @@
 ---
-// TEMPORARY home page: only proves the stylesheet pipeline works. Task 3 replaces it.
-// The frontmatter fence (---) is server-side code that runs at build time.
-import "../styles/global.css";
+// TEMPORARY home page: Task 4 replaces the body with the real home content.
+import BaseLayout from '@layouts/BaseLayout.astro';
 ---
 
-<html lang="en">
-  <body>
-    <article class="prose prose-slate dark:prose-invert prose-quoteless">Hello</article>
-  </body>
-</html>
+<BaseLayout sourcePath="src/content/pages/home.md">
+  <article class="prose prose-slate dark:prose-invert prose-quoteless">Hello</article>
+</BaseLayout>

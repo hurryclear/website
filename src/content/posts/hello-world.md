@@ -6,3 +6,5 @@ draft: false
 ---
 
 This is the first post. Replace it with real content when you're ready.
+
+A test post.

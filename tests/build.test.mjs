@@ -88,3 +88,17 @@ test('taxonomy index pages exist', () => {
   assert.match(readPage('categories/'), /<title>Categories :: Hur Jiang<\/title>/);
   assert.match(readPage('tags/'), /<title>Tags :: Hur Jiang<\/title>/);
 });
+
+test('404 page', () => {
+  const html = readPage('404.html');
+  assert.match(html, /Page not found/);
+  assert.match(html, /<a[^>]+href="\/"[^>]*>\s*Go back home/);
+  assert.doesNotMatch(html, /profile-avatar/); // no rail
+});
+
+test('search placeholder', () => {
+  const html = readPage('search/');
+  assert.match(html, /<title>Search :: Hur Jiang<\/title>/);
+  assert.match(html, /Search is coming soon\./);
+  assert.doesNotMatch(html, /profile-avatar/);
+});

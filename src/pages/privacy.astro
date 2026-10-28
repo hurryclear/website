@@ -1,0 +1,19 @@
+---
+// Privacy page: renders src/content/pages/privacy.md under a heading.
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeading from '@components/PageHeading.astro';
+import Prose from '@components/Prose.astro';
+
+const entry = (await getEntry('pages', 'privacy'))!;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={entry.data.title || 'Privacy'} description={entry.data.description} sourcePath={entry.filePath}>
+  <article>
+    <PageHeading title={entry.data.title} description={entry.data.description} />
+    <div class="mt-8">
+      <Prose><Content /></Prose>
+    </div>
+  </article>
+</BaseLayout>

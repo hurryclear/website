@@ -40,3 +40,22 @@ test('theme toggle is a hydrated React island', () => {
 test('home nav item is current on home', () => {
   assert.match(readPage(''), /<a[^>]+href="\/"[^>]+aria-current="page"/);
 });
+
+test('home renders essay and profile rail', () => {
+  const html = readPage('');
+  assert.match(html, /I start the blog because I’?'?m tired/);
+  // Astro puts src before class, so match the tag and check both attributes inside it.
+  const img = html.match(/<img[^>]*class="[^"]*profile-avatar[^"]*"[^>]*>/)?.[0] ?? '';
+  assert.match(img, /src="[^"]+\.webp"/);
+  assert.match(html, /Data Engineer &amp; Software Developer/);
+  assert.match(html, /href="https:\/\/www\.linkedin\.com\/in\/hurryclear\/"/);
+  assert.match(html, /href="\/about\/"[^>]*>\s*More about me/);
+});
+
+test('about and privacy pages', () => {
+  const about = readPage('about/');
+  assert.match(about, /<title>About :: Hur Jiang<\/title>/);
+  assert.match(about, /<h1[^>]*>Education<\/h1>/);
+  assert.match(about, /<a[^>]+href="\/about\/"[^>]+aria-current="page"/);
+  assert.match(readPage('privacy/'), /This site does not collect personal data/);
+});

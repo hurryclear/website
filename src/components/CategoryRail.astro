@@ -1,0 +1,30 @@
+---
+// Right-rail category list with post counts. Used by BaseLayout when rail="categories".
+import { getTerms } from '@lib/posts';
+import { t } from '../i18n/ui';
+
+const categories = await getTerms('categories');
+---
+
+<section class="flex flex-col gap-y-2 text-sm">
+  <h2 class="font-semibold uppercase tracking-wide text-xs text-slate-500 dark:text-slate-400">{t('rail.categories')}</h2>
+  {
+    categories.length > 0 ? (
+      <>
+        <ul class="flex flex-col gap-y-1">
+          {categories.map((c) => (
+            <li>
+              <a href={`/categories/${c.slug}/`} class="flex items-center justify-between text-slate-600 dark:text-slate-300 hover:text-emerald-600">
+                <span>{c.name}</span>
+                <span class="text-slate-400 dark:text-slate-500">{c.count}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a class="font-medium hover:text-emerald-600" href="/categories/">{t('rail.allCategories')} &rarr;</a>
+      </>
+    ) : (
+      <p class="text-slate-500 dark:text-slate-400">{t('rail.noCategories')}</p>
+    )
+  }
+</section>

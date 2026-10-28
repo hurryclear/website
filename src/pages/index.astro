@@ -1,8 +1,16 @@
 ---
-// TEMPORARY home page: Task 4 replaces the body with the real home content.
+// Home page: renders src/content/pages/home.md. No heading, as on the old site.
+import { getEntry, render } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
+import Prose from '@components/Prose.astro';
+
+const entry = (await getEntry('pages', 'home'))!;
+// render() turns the Markdown body into a <Content /> component.
+const { Content } = await render(entry);
 ---
 
-<BaseLayout sourcePath="src/content/pages/home.md">
-  <article class="prose prose-slate dark:prose-invert prose-quoteless">Hello</article>
+<BaseLayout sourcePath={entry.filePath}>
+  <article>
+    <Prose><Content /></Prose>
+  </article>
 </BaseLayout>
